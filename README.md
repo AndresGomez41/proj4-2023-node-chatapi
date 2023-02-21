@@ -1,5 +1,5 @@
 
-gitHub de ejemplo: https://github.com/SheykoWk/clone-chat-APi
+
 
 [X] Manejar usuarios
 [X] Esos usarios puedan inicar sesion 
