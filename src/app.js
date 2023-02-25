@@ -2,6 +2,7 @@ const express = require('express')
 const responseHandlers = require('./utils/handleResponses')
 const db = require('./utils/database')
 const userRouter = require('./users/users.router')
+const authRouter = require('./auth/auth.router')
 const { request } = require('express')
 const initModels = require('./models/initModels')
 
@@ -26,12 +27,14 @@ app.get('/', (req, res) => {
     message: 'Servidor inicializado correctamente',
     data: {
         "users": "http://localhost:9000/api/v1/users",
-        "conversations": "http://localhost:9000/api/v1/convers" 
+        "conversations": "http://localhost:9000/api/v1/conversations",
+        "login": "http://localhost:9000/api/v1/auth/login"  
     }
   })
 })
 
 app.use('/api/v1/users', userRouter)
+app.use('/api/v1/auth', authRouter)
 
 app.use('*', (req, res) => {
   responseHandlers.error({

@@ -2,8 +2,7 @@ const usersControllers = require("./users.controllers");
 const responses = require("../utils/handleResponses");
 
 const getAllUsers = (req, res) => {
-  usersControllers
-    .findAllUser()
+  usersControllers.findAllUser()
     .then((data) => {
       responses.success({
         status: 200,

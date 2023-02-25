@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize')
 const db = require('../utils/database')
+// const Users = require('../models/users.models')
 
 const Conversations = db.define("conversations",{
   id:{
@@ -9,12 +10,17 @@ const Conversations = db.define("conversations",{
   profileImage:{
     type: DataTypes.STRING,
   },
-  Name:{
+  name:{
     type: DataTypes.STRING
   },
-  createdBy:{
-    type: DataTypes.UUID
-  },
+  // createdBy:{
+  //   type: DataTypes.UUID,
+  //   allowNull: false,
+  //   references: {
+  //     model: Users,
+  //     key: 'id'
+  //   }
+  // },
   isGroup:{
     type: DataTypes.BOOLEAN,
     defaultValue: false

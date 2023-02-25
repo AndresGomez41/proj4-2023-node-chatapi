@@ -1,5 +1,6 @@
 const Users = require('../models/users.models')
 const uuid = require('uuid')
+const { hashPassword } = require('../utils/crypto')
 
 
 const findAllUser = async () => {
@@ -16,13 +17,22 @@ const findUserById = async (id) => {
     return data
 }
 
+const findUserByEmail = async (email) => {
+    const data = await Users.findOne({
+        where: {
+            email:email
+        }
+    })
+    return data
+}
+
 const createNewUser = async (userObj) => {
     const newUser = {
         id: uuid.v4(),
         firstName : userObj.firstName,
         lastName : userObj.lastName,
         email: userObj.email,
-        password: userObj.password,
+        password: hashPassword(userObj.password),
         profileImage: userObj.profileImage,
         phone : userObj.phone
     }
@@ -31,7 +41,8 @@ const createNewUser = async (userObj) => {
 }
 
 const updateUser = async (id, userObj) => {
-    //data === 1
+    // data genera un arreglo con un arreglo con un 0 o un 1, 
+    // 1 significa que se modifico el usuario , 0 es que no encontro usuario
     const data = await Users.update(userObj,{
         where: {
             id: id
@@ -52,6 +63,7 @@ const deleteUser = async (id) => {
 module.exports = {
     findAllUser,
     findUserById,
+    findUserByEmail,
     createNewUser,
     updateUser,
     deleteUser
