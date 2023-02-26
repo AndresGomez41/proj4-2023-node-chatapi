@@ -15,7 +15,7 @@ const postLogin = (req,res) => {
           },
           'academlo',
           {
-            expiresIn: 30
+            expiresIn: '1d'
           })
 
           response.success({

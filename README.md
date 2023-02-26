@@ -13,5 +13,6 @@
 - Manejar fotos de perfil 
 - Reenviar un mensaje 
 - Crear links para invitar gente a un grupo
+- Manejar un historial de mensajes para unicamente mostrar desde que te agregaron a un grupo
 
 ![Database Diagram](https://i.imgur.com/IHhtWv2.png)

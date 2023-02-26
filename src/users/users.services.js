@@ -1,8 +1,10 @@
 const usersControllers = require("./users.controllers");
 const responses = require("../utils/handleResponses");
+const { hashPassword } = require("../utils/crypto");
 
 const getAllUsers = (req, res) => {
-  usersControllers.findAllUser()
+  usersControllers
+    .findAllUser()
     .then((data) => {
       responses.success({
         status: 200,
@@ -23,7 +25,8 @@ const getAllUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   const id = req.params.id;
-  usersControllers.findUserById(id)
+  usersControllers
+    .findUserById(id)
     .then((data) => {
       if (data) {
         responses.success({
@@ -52,7 +55,8 @@ const getUserById = (req, res) => {
 
 const postNewUser = (req, res) => {
   const userObj = req.body;
-  usersControllers.createNewUser(userObj)
+  usersControllers
+    .createNewUser(userObj)
     .then((data) => {
       responses.success({
         status: 201,
@@ -83,7 +87,8 @@ const patchUser = (req, res) => {
   const id = req.params.id;
   const userObj = req.body;
 
-  usersControllers.updateUser(id, userObj)
+  usersControllers
+    .updateUser(id, userObj)
     .then((data) => {
       if (data) {
         responses.success({
@@ -129,7 +134,8 @@ const patchUser = (req, res) => {
 const deleteUser = (req, res) => {
   const id = req.params.id;
 
-  usersControllers.deleteUser(id)
+  usersControllers
+    .deleteUser(id)
     .then((data) => {
       if (data) {
         responses.success({
@@ -157,10 +163,94 @@ const deleteUser = (req, res) => {
     });
 };
 
+// los servicios para acciones sobre mi propio usuario:
+
+const getMyUser = (req, res) => {
+  // req.user.id se obtuvo desde el token decodificado con PASSPORT
+  const id = req.user.id;
+  usersControllers
+    .findUserById(id)
+    .then((data) => {
+      responses.success({
+        res,
+        status: 200,
+        message: " This is your current user",
+        data,
+      });
+    })
+    .catch((err) => {
+      responses.error({
+        res,
+        status: 400,
+        message: "something went wrong on current user",
+        data: err
+      });
+    });
+};
+
+const deleteMyUser = (req, res) => {
+  const id = req.user.id;
+  usersControllers
+    .deleteUser(id)
+    .then((data) => {
+      responses.success({
+        res,
+        status: 200,
+        message: `User deleted succesfully with id: ${id}`,
+        data,
+      });
+    })
+    .catch((err) => {
+      responses.error({
+        res,
+        status: 400,
+        message: "something went wrong deleting YOUR USER",
+        data: err
+      });
+    });
+};
+
+const patchMyUser = (req, res) => {
+  const id = req.user.id;
+  const { email, password, firstName, lastName, phone, profileImage } = req.body;
+  const userObj = {
+    password: hashPassword(password),
+    email,
+    firstName,
+    lastName,
+    phone,
+    profileImage,
+  };
+
+  usersControllers
+    .updateUser(id, userObj)
+    .then((data) => {
+      responses.success({
+        res,
+        status: 200,
+        message: `User UPDATED succesfully with id: ${id}`,
+        data,
+      });
+    })
+    .catch((err) => {
+      responses.error({
+        res,
+        status: 400,
+        message: "something went wrong deleting YOUR USER",
+        data: err
+      });
+    });
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
+
+  getMyUser,
+  patchMyUser,
+  deleteMyUser,
+
   postNewUser,
   patchUser,
-  deleteUser
+  deleteUser,
 };
