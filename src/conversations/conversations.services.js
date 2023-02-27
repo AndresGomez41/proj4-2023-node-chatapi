@@ -1,71 +1,70 @@
-const conversationControllers = require('../conversations/conversations.controllers')
-const responses = require('../utils/handleResponses')
+const conversationControllers = require("./conversations.controllers");
+const responses = require("../utils/handleResponses");
 
-const getAllConversationsByUser =  (req, res) => {
-  const userId = req.user.id 
-  conversationControllers.findAllConversationsByUser(userId)
-    .then( data => {
+const getAllConversationsByUser = (req, res) => {
+  const userId = req.user.id;
+
+  conversationControllers
+    .findAllConversationsByUser(userId)
+    .then((data) => {
       responses.success({
         res,
-        status:200,
-        message: data.length ? 'Showing all your conversations':'No conversations to show' ,
-        data
-      })
+        status: 200,
+        message: data.length
+          ? "Showing all your conversations"
+          : "No conversations to show",
+        data,
+      });
     })
-    .catch( err => {
+    .catch((err) => {
       responses.error({
         res,
-        status:400,
-        message: 'something went wrong',
+        status: 400,
+        message: "Something bad",
         data: err,
-        fields:{}
-      })
-    })
-}
+      });
+    });
+};
 
-const postNewConversation = (req,res) => {
+const postNewConversation = (req, res) => {
+  const ownerId = req.user.id;
+  const { guestId, ...conversationObj } = req.body;
 
-  const ownerId = req.user.id
-  const {guestId, ...conversationObj} = req.body
-
-  conversationControllers.createConversation(conversationObj, ownerId, guestId)
-    .then( data => {
-      if( data ){
+  conversationControllers
+    .createConversation(conversationObj, ownerId, guestId)
+    .then((data) => {
+      if (data) {
         responses.success({
           res,
-          status:201,
-          message: 'Conversation created succesfully',
-          data
-        })
+          status: 201,
+          message: "Conversation created successfully!",
+          data,
+        });
       } else {
         responses.error({
           res,
           status: 400,
           message: `User with id: ${guestId} not found`,
-          data,
-          fields:{}
-        })
-
+        });
       }
-    }).catch( err => {
+    })
+    .catch((err) => {
       responses.error({
         res,
-        status:400,
-        message: err.message || 'something went wrong',
+        status: 400,
+        message: err.message || "Something bad",
         data: err,
-        fields:{
-          guestId: 'uuid',
-          name: 'string',
-          profileImage: 'string',
-          isGroup: 'boolean'
-        }
-      })
-    })
-}
-
-
+        fields: {
+          name: "String",
+          profileImage: "String",
+          isGroup: "boolean",
+          guestId: "String UUID",
+        },
+      });
+    });
+};
 
 module.exports = {
   getAllConversationsByUser,
-  postNewConversation
-}
+  postNewConversation,
+};

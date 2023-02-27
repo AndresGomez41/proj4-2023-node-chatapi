@@ -5,6 +5,7 @@ const initModels = require('./models/initModels')
 const passportJwt = require('./middlewares/auth.middleware')
 const userRouter = require('./users/users.router')
 const authRouter = require('./auth/auth.router')
+const conversationRouter = require('./conversations/conversations.router')
 const { request } = require('express')
 
 const app =  express()
@@ -34,16 +35,17 @@ app.get('/', (req, res) => {
   })
 })
 
-app.use('/protected', 
+app.use('/api/v1/protected', 
   passportJwt,
   (req, res) => {
-    res.status(200).json({message: `Hola ${req.user.firstName} sesion iniciada correctamente con PASSPORT middleware`
-  })
+    res.status(200).json({message: `Hola ${req.user.firstName} sesion iniciada correctamente con PASSPORT middleware`,
     tokenDecoded : req.user     
+  })
   }
 )
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/conversations', conversationRouter)
 
 app.use('*', (req, res) => {
   responseHandlers.error({

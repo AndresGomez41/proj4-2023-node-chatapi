@@ -22,14 +22,18 @@ const postLogin = (req,res) => {
             status:200,
             message: 'correct credentials',
             data: token,       
-            res     
+            res,    
           })
         }else{
           response.error({
             status: 401,
             message: 'Invalid credentials',
             data,     
-            res,      
+            res, 
+            fields:{
+              email:"123@example.com",
+              password: "string"
+            }      
           })
         }
     })
